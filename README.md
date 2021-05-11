@@ -14,7 +14,7 @@ The modules used are as follows.
 1. application.yml 추적 방지
 <pre>
 <code>
-   git update-index --assume-unchanged src/main/resource/application.yml
+   git update-index --assume-unchanged src/main/resources/application.yml
 </code>
 </pre>
 - 이후 application.yml내 db커넥션 수정
