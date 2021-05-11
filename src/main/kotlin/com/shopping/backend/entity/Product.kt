@@ -16,7 +16,7 @@ data class Product (
     @Column(name = "price")
     val price: Long,
     @Column(name = "image")
-    val image: String,
+    val image: String?,
 //    @ManyToOne
 //    @JoinColumn(foreignKey = ForeignKey(name = "fk_category"))
 //    val category: Category?,
