@@ -1,5 +1,6 @@
 package com.shopping.backend.controller
 
+import com.shopping.backend.entity.Product
 import com.shopping.backend.repository.reactive.ProductRxRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.ReactiveRedisOperations
@@ -17,17 +18,18 @@ class ProductController {
     @Autowired
     lateinit var productRxRepository: ProductRxRepository
 
-    @Autowired
-    lateinit var cacheRedisOps: ReactiveRedisOperations<String, Any>
+//    @Autowired
+//    lateinit var cacheRedisOps: ReactiveRedisOperations<String, Any>
 
     @GetMapping
-    fun getProdict(@RequestParam("id") id: Long): Mono<Any> {
-        val key = "product:${id}"
-        return cacheRedisOps.opsForValue().get(key).switchIfEmpty {
-            productRxRepository.findById(id).map {
-                cacheRedisOps.opsForValue().set(key, it).subscribe()
-                it
-            }
-        }
+    fun getProduct(@RequestParam("id") id: Long): Mono<Product> {
+//        val key = "product:${id}"
+//        return cacheRedisOps.opsForValue().get(key).switchIfEmpty {
+//            productRxRepository.findById(id).map {
+//                cacheRedisOps.opsForValue().set(key, it).subscribe()
+//                it
+//            }
+//        }
+        return productRxRepository.findById(id)
     }
 }

@@ -24,7 +24,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+//        exclude("org.springframework.boot:spring-boot-starter-tomcat")
+    }
+//    implementation("org.springframework.boot:spring-boot-starter-undertow")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-security")
@@ -44,10 +47,20 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.mariadb:r2dbc-mariadb:1.0.1")
     implementation("mysql:mysql-connector-java")
+//    implementation("org.jboss.logging:jboss-logging:3.4.1.Final")
+//    implementation("org.jboss.slf4j:slf4j-jboss-logmanager:1.1.0.Final")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 }
+
+//configurations {
+//    all {
+//        exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
+//        exclude(group = "org.springframework.boot", module = "logback-classic")
+//        exclude(group = "org.slf4j", module = "slf4j-log4j12")
+//    }
+//}
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -61,5 +74,9 @@ tasks.withType<Test> {
 }
 
 tasks.withType<War> {
+    enabled = true
+}
+
+tasks.withType<Jar> {
     enabled = true
 }
