@@ -11,6 +11,8 @@ data class User (
     var id: String,
     @Column(name = "name")
     val name: String,
+    @Column(name = "email")
+    var email: String?,
     @Column(name = "password")
     val password: String,
     @Column(name = "role_type")

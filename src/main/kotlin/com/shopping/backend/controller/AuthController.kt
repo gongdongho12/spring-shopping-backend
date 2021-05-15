@@ -48,6 +48,7 @@ class AuthController(
                         User(
                             authReqModel.id,
                             authReqModel.name,
+                            authReqModel.email?: null,
                             password,
                             RoleType.valueOf(authReqModel.roleType)
                         )
