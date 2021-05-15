@@ -3,10 +3,12 @@ package com.shopping.backend.provider
 import com.shopping.backend.domain.account.UserPrincipal
 import com.shopping.backend.service.ShoppingUserDetailService
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.annotation.PostConstruct
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest
 class JwtTokenProvider {
     companion object {
         private const val TOKEN_TTL = 60 * 60 * 1000L
+        private const val REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000L
     }
 
     @Autowired
@@ -24,6 +27,9 @@ class JwtTokenProvider {
     // 설정 파일에 등록해 두었습니다.
     @Value("\${spring.jwt.secret}")
     lateinit var secretKey: String
+
+    @Autowired
+    lateinit var passwordEncoder: BCryptPasswordEncoder
 
     // 비밀키를 Base64로 인코딩해 주었습니다.
     @PostConstruct
@@ -47,9 +53,18 @@ class JwtTokenProvider {
             )
                 .setIssuedAt(now)
                 .setExpiration(Date(now.time + TOKEN_TTL))
-                .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact()
         }!!
+
+    fun createRefreshToken(): String =
+        Jwts.builder().let {
+            val now = Date()
+            it
+                .setExpiration(Date(now.time + REFRESH_TOKEN_TTL))
+                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact()
+        }
 
     fun getAuthentication(token: String?): Authentication =
         userDetailService.loadUserByUsername(this.getUserId(token)).let {
