@@ -28,22 +28,21 @@ class UserController {
     lateinit var passwordEncoder: BCryptPasswordEncoder
 
     @GetMapping
-    fun getUser(): () -> Optional<User> =
+    fun getUser(): Optional<User> {
         // Spring security 로부터 Principal을 가져옵니다.
         // 인증 필터에서 user 정보가 이미 세팅되었습니다.
-        SecurityContextHolder.getContext().authentication.principal
+        return SecurityContextHolder.getContext().authentication.principal
             .let { principal ->
-                when(principal) {
+                when (principal) {
                     // 객체 타입이 UserPrincial인면 username을 받아옵니다.
                     is UserPrincipal -> principal.username
                     else -> throw InternalAuthenticationServiceException("Can not found matched User Principal")
-                }.let { id -> {
-                    userRepository.findById(id)
-                }
-            }}
+                }.let { id -> userRepository.findById(id) }
+            }
+    }
 
     @PutMapping
-    fun putMember(user: User): User {
+    fun putUser(user: User): User {
         return SecurityContextHolder.getContext().authentication.principal
             .let { principal ->
                 when (principal) {
